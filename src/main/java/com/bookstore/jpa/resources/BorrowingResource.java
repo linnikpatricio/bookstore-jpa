@@ -2,6 +2,7 @@ package com.bookstore.jpa.resources;
 
 import com.bookstore.jpa.entities.Book;
 import com.bookstore.jpa.entities.Borrowing;
+import com.bookstore.jpa.services.BookService;
 import com.bookstore.jpa.services.BorrowingSerivce;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import java.util.List;
 public class BorrowingResource {
     @Autowired
     private BorrowingSerivce borrowingSerivce;
+
     @GetMapping
     public ResponseEntity<List<Borrowing>> findAll() {
         List<Borrowing> list = borrowingSerivce.findAll();
@@ -31,6 +33,11 @@ public class BorrowingResource {
         obj = borrowingSerivce.insert(obj);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
         return ResponseEntity.created(uri).body(obj);
+    }
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        borrowingSerivce.delete(id);
+        return ResponseEntity.noContent().build();
     }
 
 

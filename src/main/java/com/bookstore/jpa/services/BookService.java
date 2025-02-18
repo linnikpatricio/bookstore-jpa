@@ -1,6 +1,7 @@
 package com.bookstore.jpa.services;
 
 import com.bookstore.jpa.entities.Book;
+import com.bookstore.jpa.entities.enums.BookStatus;
 import com.bookstore.jpa.repositories.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,7 +24,15 @@ public class BookService {
     }
 
     public Book insert(Book obj) {
+
+        if(obj.getBookStatus() == null) {
+            obj.setBookStatus(BookStatus.AVAILABLE);
+        }
         return repository.save(obj);
+    }
+
+    public Book update(Book book) {
+        return repository.save(book);
     }
 
     public void delete(Long id) {
