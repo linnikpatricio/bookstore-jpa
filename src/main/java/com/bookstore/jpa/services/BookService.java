@@ -3,6 +3,7 @@ package com.bookstore.jpa.services;
 import com.bookstore.jpa.entities.Book;
 import com.bookstore.jpa.entities.enums.BookStatus;
 import com.bookstore.jpa.repositories.BookRepository;
+import com.bookstore.jpa.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +21,7 @@ public class BookService {
 
     public Book findById(Long id) {
         Optional<Book> obj = repository.findById(id);
-        return obj.get();
+        return obj.orElseThrow(() -> new ResourceNotFoundException(id));
     }
 
     public Book insert(Book obj) {

@@ -6,6 +6,7 @@ import com.bookstore.jpa.entities.Borrowing;
 import com.bookstore.jpa.entities.Reader;
 import com.bookstore.jpa.entities.enums.BookStatus;
 import com.bookstore.jpa.repositories.BorrowingRepository;
+import com.bookstore.jpa.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,13 +30,20 @@ public class BorrowingSerivce {
 
     public Borrowing findById(Long id) {
         Optional<Borrowing> obj = borrowingRepository.findById(id);
-        return obj.get();
+        return obj.orElseThrow(() -> new ResourceNotFoundException(id));
     }
 
     public Borrowing insert(Borrowing obj) {
 
         Book book = bookService.findById(obj.getBook().getId());
+        if(book == null) {
+            throw new RuntimeException("O Livro não existe!");
+        }
+
         Reader reader = readerService.findById(obj.getReader().getId());
+        if(reader == null) {
+            throw new RuntimeException("O Cliente não existe!");
+        }
 
         if(book.getBookStatus() == BookStatus.LOANED) {
             throw new RuntimeException("O Livro ja está emprestado!");
