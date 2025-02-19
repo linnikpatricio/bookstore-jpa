@@ -36,14 +36,8 @@ public class BorrowingSerivce {
     public Borrowing insert(Borrowing obj) {
 
         Book book = bookService.findById(obj.getBook().getId());
-        if(book == null) {
-            throw new RuntimeException("O Livro não existe!");
-        }
 
         Reader reader = readerService.findById(obj.getReader().getId());
-        if(reader == null) {
-            throw new RuntimeException("O Cliente não existe!");
-        }
 
         if(book.getBookStatus() == BookStatus.LOANED) {
             throw new RuntimeException("O Livro ja está emprestado!");
@@ -60,6 +54,9 @@ public class BorrowingSerivce {
     }
 
     public void delete(Long id) {
+        if(!borrowingRepository.existsById(id)) {
+            throw new ResourceNotFoundException(id);
+        }
         borrowingRepository.deleteById(id);
     }
 

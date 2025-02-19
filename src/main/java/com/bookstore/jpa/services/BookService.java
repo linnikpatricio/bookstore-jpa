@@ -5,6 +5,7 @@ import com.bookstore.jpa.entities.enums.BookStatus;
 import com.bookstore.jpa.repositories.BookRepository;
 import com.bookstore.jpa.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,12 +33,15 @@ public class BookService {
         return repository.save(obj);
     }
 
+
     public Book update(Book book) {
         return repository.save(book);
     }
 
     public void delete(Long id) {
+        if(!repository.existsById(id)) {
+            throw new ResourceNotFoundException(id);
+        }
         repository.deleteById(id);
     }
-
 }
